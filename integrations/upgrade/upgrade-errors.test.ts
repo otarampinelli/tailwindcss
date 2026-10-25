@@ -87,7 +87,7 @@ test(
           },
           "devDependencies": {
             "@tailwindcss/cli": "workspace:^",
-            "bun": "^1.0.0"
+            "bun": "1.4.3"
           }
         }
       `,
@@ -109,7 +109,12 @@ test(
     retry: 0,
   },
   async ({ exec, expect }) => {
-    // Use `bun` to install dependencies
+    // Use `bun` to install dependencies.
+    //
+    // Bun is pinned to 1.4.3 because 1.4.4 copies the `overrides` from
+    // `pnpm-workspace.yaml` into `package.json`
+    // npm cannot parse the pnpm-style `a>b` keys, 
+    // so the `npx` calls below would fail
     await exec('rm ./pnpm-lock.yaml')
     try {
       await exec('npx bun install', {}, { ignoreStdErr: true })
